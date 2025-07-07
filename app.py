@@ -11,16 +11,17 @@ st.title("🛠️ Product Management Bot")
 def get_user_inputs():
     base_url = st.text_input("Aha! base URL", "https://yourcompany.aha.io")
     product_id = st.text_input("Aha! Product ID")
+    aha_api_key = st.text_input("Aha! API Key", type="password")
     openai_api_key = st.text_input("OpenAI API Key (optional)", type="password")
-    return base_url, product_id, openai_api_key
+    return base_url, product_id, aha_api_key, openai_api_key
 
-base_url, product_id, openai_api_key = get_user_inputs()
+base_url, product_id, aha_api_key, openai_api_key = get_user_inputs()
 
 if st.button("Fetch Stories"):
-    if not base_url or not product_id:
-        st.error("Please enter both Aha! base URL and Product ID.")
+    if not base_url or not product_id or not aha_api_key:
+        st.error("Please enter Aha! base URL, Product ID, and Aha! API Key.")
     else:
-        # Set OpenAI key if provided
+        os.environ["AHA_API_KEY"] = aha_api_key
         if openai_api_key:
             os.environ["OPENAI_API_KEY"] = openai_api_key
         try:
